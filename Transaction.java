@@ -3,6 +3,7 @@
  * Demonstrates OOP principles by using the BankAccount class in a real-world scenario.
  */
 import java.util.Scanner;
+import java.util.InputMismatchException;
 
 public class Transaction {
    public static void main(String[] args) {
@@ -23,7 +24,13 @@ public class Transaction {
       while (choice != 5) {
          System.out.println("1. Deposit  2. Withdraw  3. Check Balance 4. Check Transaction Log 5. Exit");
          System.out.print("Choose option: ");
-         choice = input.nextInt(); // Read user's choice
+         try {
+             choice = input.nextInt();
+         } catch (InputMismatchException e) {
+             System.out.println("Invalid menu option. Please enter a number (1-5).");
+             input.next(); // clear invalid input
+             continue; // skip to next loop iteration
+         }
          
          // Route actions based on the selected account
          switch (accountChoice) {
@@ -33,14 +40,26 @@ public class Transaction {
                   case 1:
                      // Handle deposit: read amount and update balance
                      System.out.print("Enter amount: ");
-                     amount = input.nextDouble();
-                     account1.deposit(amount);
+                     try {
+                        amount = input.nextDouble();
+                        account1.deposit(amount);
+                     // Handle non-numeric input gracefully and clear scanner buffer
+                     } catch (InputMismatchException e) {
+                        System.out.println("Invalid amount. Please enter a number.");
+                        input.next();
+                     }
                      break;
                   case 2:
                      // Handle withdrawal: read amount and attempt to deduct
                      System.out.print("Enter amount: ");
-                     amount = input.nextDouble();
-                     account1.withdraw(amount);
+                     try {
+                        amount = input.nextDouble();
+                        account1.withdraw(amount);
+                     // Handle non-numeric input gracefully and clear scanner buffer
+                     } catch (InputMismatchException e) {
+                        System.out.println("Invalid amount. Please enter a number.");
+                        input.next();
+                     }
                      break;
                   case 3:
                      // Display account holder name and formatted balance
@@ -60,14 +79,26 @@ public class Transaction {
                   case 1:
                      // Handle deposit: read amount and update balance
                      System.out.print("Enter amount: ");
-                     amount = input.nextDouble();
-                     account2.deposit(amount);
+                     try {
+                        amount = input.nextDouble();
+                        account2.deposit(amount);
+                     // Handle non-numeric input gracefully and clear scanner buffer
+                     } catch (InputMismatchException e) {
+                        System.out.println("Invalid amount. Please enter a number.");
+                        input.next();
+                     }
                      break;
                   case 2:
                      // Handle withdrawal: read amount and attempt to deduct
                      System.out.print("Enter amount: ");
-                     amount = input.nextDouble();
-                     account2.withdraw(amount);
+                     try {
+                        amount = input.nextDouble();
+                        account2.withdraw(amount);
+                     // Handle non-numeric input gracefully and clear scanner buffer
+                     } catch (InputMismatchException e) {
+                        System.out.println("Invalid amount. Please enter a number.");
+                        input.next();
+                     }
                      break;
                   case 3:
                      // Display account holder name and formatted balance
