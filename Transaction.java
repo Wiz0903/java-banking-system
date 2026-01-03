@@ -20,14 +20,14 @@ public class Transaction {
       System.out.println("Which account? (1) Tshokolo (2) Karabo");
       int accountChoice = input.nextInt();
       
-      // Main menu loop — runs until user chooses to exit (option 4)
-      while (choice != 5) {
-         System.out.println("1. Deposit  2. Withdraw  3. Check Balance 4. Check Transaction Log 5. Exit");
+      // Main menu loop — runs until user chooses to exit (option 6)
+      while (choice != 6) {
+         System.out.println("1. Deposit  2. Withdraw  3. Transfer 4. Check Balance 5. Check Transaction Log 6. Exit");
          System.out.print("Choose option: ");
          try {
              choice = input.nextInt();
          } catch (InputMismatchException e) {
-             System.out.println("Invalid menu option. Please enter a number (1-5).");
+             System.out.println("Invalid menu option. Please enter a number (1-6).");
              input.next(); // clear invalid input
              continue; // skip to next loop iteration
          }
@@ -62,15 +62,27 @@ public class Transaction {
                      }
                      break;
                   case 3:
+                     // Handle transfer: read amount and attempt to deduct
+                     System.out.print("Enter amount: ");
+                     try {
+                        amount = input.nextDouble();
+                        account1.transfer(account2, amount);
+                     // Handle non-numeric input gracefully and clear scanner buffer
+                     } catch (InputMismatchException e) {
+                        System.out.println("Invalid amount. Please enter a number.");
+                        input.next();
+                     }
+                     break;
+                  case 4:
                      // Display account holder name and formatted balance
                      System.out.println(account1.getAccountHolder() + "'s balance: R" + account1.getBalance());
                      break;
-                  case 4:
+                  case 5:
                      // Display full transaction history for this account
                      account1.printStatement();
                      break;
             
-                  // Option 5: Exit loop (no action needed — loop condition handles exit)
+                  // Option 6: Exit loop (no action needed — loop condition handles exit)
                }
                break;
            case 2:
@@ -101,15 +113,27 @@ public class Transaction {
                      }
                      break;
                   case 3:
+                     // Handle transfer: read amount and attempt to deduct
+                     System.out.print("Enter amount: ");
+                     try {
+                        amount = input.nextDouble();
+                        account2.transfer(account1, amount);
+                     // Handle non-numeric input gracefully and clear scanner buffer
+                     } catch (InputMismatchException e) {
+                        System.out.println("Invalid amount. Please enter a number.");
+                        input.next();
+                     }
+                     break;
+                  case 4:
                      // Display account holder name and formatted balance
                      System.out.println(account2.getAccountHolder() + "'s balance: R" + account2.getBalance());
                      break;
-                  case 4:
+                  case 5:
                      // Display full transaction history for this account
                      account2.printStatement();
                      break;
             
-                  // Option 5: Exit loop (no action needed — loop condition handles exit)
+                  // Option 6: Exit loop (no action needed — loop condition handles exit)
                }
                break;
             default:
