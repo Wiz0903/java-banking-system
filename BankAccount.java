@@ -53,6 +53,63 @@ public class BankAccount {
          System.out.println("Insufficient funds available");
       }
    }
+
+   /**
+    * Transfers a specified amount from this account to another BankAccount.
+    * Ensures the transfer is valid by checking for positive amount and sufficient funds.
+    * Both accounts are updated atomically: if one step fails, no changes are made.
+    * 
+    * @param recipient The destination BankAccount to receive funds (must not be null)
+    * @param amount    The amount to transfer (must be greater than zero)
+    */
+   public void transfer(BankAccount recipient, double amount) {
+      // Validate that the recipient account is not null
+      if (recipient == null) {
+         System.out.println("Error: Recipient account is invalid.");
+         return;
+      }
+      
+      // Validate that the transfer amount is positive
+      if (amount > 0) {
+         // Check if this account has sufficient balance for the transfer
+         if (balance >= amount) {
+            // Deduct the amount from this account's balance
+            balance -= amount;
+            // Add the amount to the recipient's balance
+            recipient.receiveTransfer(this, amount); // sender passes itself
+
+            if (transactionCount < 100) {
+               transactionLog[transactionCount] = "Transferred R" + amount + " to " + recipient.getAccountHolder();
+               transactionCount++;
+            }
+         } else {
+            // Inform user when balance is too low to complete transfer
+            System.out.println("Insufficient funds available");
+         }
+      } else {
+         // Inform user that transfer amount must be positive
+         System.out.println("Amount must be positive");
+      }
+   }
+
+   /**
+    * Handles an incoming transfer from another account.
+    * This method is called internally by the sender's transfer() method
+    * and should not be invoked directly by users.
+    * 
+    * @param sender The BankAccount that is sending funds
+    * @param amount The amount being received (assumed valid and positive)
+    */
+   public void receiveTransfer(BankAccount sender, double amount) {
+      // Add the incoming amount to this account's balance
+      balance += amount;
+      
+      // Log the incoming transfer if space is available in the transaction log
+      if (transactionCount < 100) {
+          transactionLog[transactionCount] = "Received R" + amount + " from " + sender.getAccountHolder();
+          transactionCount++; // Increment log index to preserve order
+      }
+   }
    
    /**
     * Returns the account holder's name.
