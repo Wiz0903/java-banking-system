@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * A class representing a bank account with basic transaction capabilities.
  * Encapsulates account holder name and balance, and provides safe deposit/withdrawal logic.
@@ -6,8 +8,7 @@ public class BankAccount {
    // Private fields ensure data integrity — only accessible through methods
    private String accountHolder;
    private double balance;
-   private String[] transactionLog = new String[100]; // max 100 transactions
-   private int transactionCount = 0;
+   private ArrayList<String> transactionLog = new ArrayList<>();
    
    /**
     * Constructor to create a new bank account.
@@ -26,10 +27,9 @@ public class BankAccount {
    public void deposit(double amount) {
       if (amount > 0) {
          balance += amount;
+         System.out.println("Deposited " + amount + ". New balance: " + balance);
          // Log the deposit if there's space in the transaction history
-         if (transactionCount < 100) {
-            transactionLog[transactionCount] = "Deposited " + amount;
-            transactionCount++;
+         transactionLog.add("Deposited " + amount);
          }
       } else {
          System.out.println("Amount must be positive");
@@ -45,9 +45,7 @@ public class BankAccount {
          balance -= amount;
          System.out.println("Withdrew " + amount + ". New balance: " + balance);
          // Log the withdrawal if there's space in the transaction history
-         if (transactionCount < 100) {
-            transactionLog[transactionCount] = "Withdrew " + amount;
-            transactionCount++;
+         transactionLog.add("Withdrew " + amount);
          }
       } else {
          System.out.println("Insufficient funds available");
@@ -78,10 +76,7 @@ public class BankAccount {
             // Add the amount to the recipient's balance
             recipient.receiveTransfer(this, amount); // sender passes itself
 
-            if (transactionCount < 100) {
-               transactionLog[transactionCount] = "Transferred R" + amount + " to " + recipient.getAccountHolder();
-               transactionCount++;
-            }
+            transactionLog.add("Transferred R" + amount + " to " + recipient.getAccountHolder());
          } else {
             // Inform user when balance is too low to complete transfer
             System.out.println("Insufficient funds available");
@@ -105,10 +100,7 @@ public class BankAccount {
       balance += amount;
       
       // Log the incoming transfer if space is available in the transaction log
-      if (transactionCount < 100) {
-          transactionLog[transactionCount] = "Received R" + amount + " from " + sender.getAccountHolder();
-          transactionCount++; // Increment log index to preserve order
-      }
+      transactionLog.add("Received R" + amount + " from " + sender.getAccountHolder());
    }
    
    /**
@@ -132,13 +124,13 @@ public class BankAccount {
     * Displays a numbered list of all recorded transactions, or a message if none exist.
     */
    public void printStatement() {
-      if (transactionCount == 0) {
+      if (transactionLog.size() == 0) {
         System.out.println("No transactions yet.");
       } else {
         System.out.println("Transaction History:");
         // Iterate through all logged transactions and print them with numbering
-        for (int i = 0; i < transactionCount; i++) {
-            System.out.println((i + 1) + ". " + transactionLog[i]);
+        for (int i = 0; i < transactionLog.size(); i++) {
+            System.out.println((i + 1) + ". " + transactionLog.get(i));
         }
       }
    }
